@@ -9,6 +9,7 @@ import random
 from keep_alive import keep_alive
 from gemini_chat import gemini_chat
 from dotenv import load_dotenv
+import wikipedia
 
 # 環境変数の読み込み
 load_dotenv("./lol/.env")
@@ -61,6 +62,8 @@ async def bot_help(interaction: discord.Interaction):
      .add_field(name="/chat <message>", value="Gemini APIとチャット") \
      .add_field(name="/chat_clear", value="チャット履歴を削除します") \
      .add_field(name="/random", value="ユーザー名をランダムに変更します")
+　　　.add_field(name="/wiki", value="Wikipediaから情報を取得します")
+　　　.add_field(name="/server", value="サーバー情報を取得します")
     await interaction.response.send_message(embed=embed)
 
         title="サポートサーバーリンク",
@@ -158,6 +161,43 @@ async def random_name(interaction: discord.Interaction):
         await interaction.response.send_message("名前を変更できませんでした。Botに権限があるか確認してください。")
     except discord.HTTPException:
         await interaction.response.send_message("名前を変更する際にエラーが発生しました。")
+
+# Wikipedia APIを使用した検索コマンド
+@bot.tree.command(name="wiki", description="Wikipediaから情報を取得します")
+async def wiki(interaction: discord.Interaction, query: str):
+    await interaction.response.defer()  # 処理中メッセージを表示
+    try:
+        wikipedia.set_lang("ja")  # Wikipediaの言語を日本語に設定
+        summary = wikipedia.summary(query, sentences=2)  # 要約を取得
+        page_url = wikipedia.page(query).url  # ページURLを取得
+        embed = discord.Embed(
+            title=f"Wikipedia: {query}",
+            description=summary,
+            color=discord.Colour.green()
+        ).add_field(name="詳細リンク", value=f"[こちら]({page_url})")
+        await interaction.followup.send(embed=embed)
+    except wikipedia.exceptions.DisambiguationError as e:
+        await interaction.followup.send(f"曖昧なキーワードです。次の候補から選択してください: {', '.join(e.options[:5])}...")
+    except wikipedia.exceptions.PageError:
+        await interaction.followup.send("指定されたキーワードのページが見つかりませんでした。")
+    except Exception as e:
+        await interaction.followup.send(f"エラーが発生しました: {str(e)}")
+
+# サーバー情報を表示するコマンド
+@bot.tree.command(name="server", description="サーバーの情報を表示します")
+async def server_info(interaction: discord.Interaction):
+    guild = interaction.guild
+    embed = discord.Embed(
+        title=f"サーバー情報: {guild.name}",
+        color=discord.Colour.blue()
+    )
+    embed.add_field(name="サーバー名", value=guild.name, inline=False)
+    embed.add_field(name="サーバーID", value=guild.id, inline=False)
+    embed.add_field(name="メンバー数", value=guild.member_count, inline=False)
+    embed.add_field(name="オーナー", value=str(guild.owner), inline=False)
+    embed.add_field(name="サーバー作成日", value=guild.created_at.strftime("%Y-%m-%d %H:%M:%S"), inline=False)
+    embed.set_thumbnail(url=guild.icon.url if guild.icon else None)
+    await interaction.response.send_message(embed=embed)
         
 # Botを実行
 keep_alive()
