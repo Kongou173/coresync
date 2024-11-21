@@ -198,7 +198,53 @@ async def server_info(interaction: discord.Interaction):
     embed.add_field(name="サーバー作成日", value=guild.created_at.strftime("%Y-%m-%d %H:%M:%S"), inline=False)
     embed.set_thumbnail(url=guild.icon.url if guild.icon else None)
     await interaction.response.send_message(embed=embed)
-        
+
+# アキネーターゲームを開始するコマンドを追加
+@bot.tree.command(name="akinator", description="アキネーターと遊びます")
+async def akinator(interaction: discord.Interaction):
+    await interaction.response.send_message("アキネーターを開始します。質問に答えてください！")
+    
+    # Akinatorのインスタンスを作成してゲームを開始
+    akinator = Akinator()
+    akinator.start_game()
+    
+    # ゲームの進行
+    while True:
+        try:
+            # 質問を表示
+            question = akinator.question
+            await interaction.followup.send(question)
+            
+            # ユーザーからの入力を待機
+            response = await bot.wait_for('message', check=lambda m: m.author == interaction.user)
+            answer = response.content.lower()
+            
+            # 「戻る」機能
+            if answer == 'b':
+                akinator.go_back()
+            else:
+                # 回答をアキネーターに送信
+                akinator.post_answer(answer)
+                
+                # 正解が出た場合
+                if akinator.answer_id:
+                    result = f"{akinator.name} / {akinator.description}"
+                    await interaction.followup.send(f"アキネーターの答えは: {result}")
+                    
+                    # 正解かどうか確認
+                    await interaction.followup.send("これは正しいですか？ (y/n)")
+                    confirmation = await bot.wait_for('message', check=lambda m: m.author == interaction.user)
+                    if confirmation.content.lower() == 'y':
+                        await interaction.followup.send("ゲーム終了！ありがとうございました！")
+                        break
+                    elif confirmation.content.lower() == 'n':
+                        akinator.exclude()
+                else:
+                    await interaction.followup.send("答えが分かりませんでした。再試行します。")
+        except Exception as e:
+            await interaction.followup.send(f"エラーが発生しました: {e}")
+            break
+            
 # Botを実行
 keep_alive()
 bot.run(TOKEN)
