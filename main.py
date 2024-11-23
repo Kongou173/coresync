@@ -117,17 +117,26 @@ async def show_time(interaction: discord.Interaction):
     tokyo_tz = pytz.timezone("Asia/Tokyo")
     current_time = datetime.now(tokyo_tz).strftime("%Y-%m-%d %H:%M:%S JST")
     await interaction.response.send_message(f"現在の時刻（東京/JST）: {current_time}")
-
-chat コマンド：Geminiとチャット
+    
+#/chatコマンド:Geminiとチャット
 @bot.tree.command(name="chat", description="Geminiとチャットします")
 async def chat(interaction: discord.Interaction, message: str):
-    global conversation_history  # 会話履歴の保存
-    await interaction.response.defer()
+    global conversation_history
+    await interaction.response.defer()  # 処理中であることをユーザーに通知
+
+    # チャット履歴にメッセージを追加
     conversation_history.append(message)
-    
-    # Gemini APIとの非同期通信
-    response = await asyncio.to_thread(gemini_chat, message, GEMINI_API_KEY)
-    await interaction.followup.send(response)
+
+    try:
+        # Gemini APIにメッセージを送信（非同期処理）
+        response = await asyncio.to_thread(gemini_chat, message)
+
+        # Gemini APIからのレスポンスを送信
+        await interaction.followup.send(response)
+
+    except Exception as e:
+        # エラーメッセージをユーザーに送信
+        await interaction.followup.send(f"エラーが発生しました: {str(e)}")
 
 # /chat_clear コマンド：チャット履歴を削除
 @bot.tree.command(name="chat_clear", description="チャット履歴を削除します")
