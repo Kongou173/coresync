@@ -10,6 +10,7 @@ from keep_alive import keep_alive
 from gemini_chat import gemini_chat
 from dotenv import load_dotenv
 import wikipedia
+import requests 
 
 # 環境変数の読み込み
 load_dotenv("./lol/.env")
@@ -170,7 +171,71 @@ async def random_name(interaction: discord.Interaction):
         await interaction.response.send_message("名前を変更できませんでした。Botに権限があるか確認してください。")
     except discord.HTTPException:
         await interaction.response.send_message("名前を変更する際にエラーが発生しました。")
+        
+# OpenWeatherMap APIを利用した天気情報取得
+@bot.tree.command(name="weather", description="指定した都市の天気情報を取得します")
+async def get_weather(interaction: discord.Interaction, city: str, forecast: bool = False):
+    """
+    city: 都市名
+    forecast: Trueなら5日間の天気予報を取得、Falseなら現在の天気
+    """
+    await interaction.response.defer()  # 処理中メッセージを表示
 
+    # APIエンドポイント
+    if forecast:
+        url = f"http://api.openweathermap.org/data/2.5/forecast"
+    else:
+        url = f"http://api.openweathermap.org/data/2.5/weather"
+
+    # APIリクエスト
+    params = {
+        "q": city,
+        "appid": OPENWEATHER_API_KEY,
+        "units": "metric",  # 温度を摂氏で取得
+        "lang": "ja",       # 日本語対応
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # HTTPエラーをチェック
+        data = response.json()
+
+        if forecast:
+            embed = discord.Embed(
+                title=f"🌦️ {city} の5日間天気予報",
+                color=discord.Colour.blue()
+            )
+            # 3時間ごとの予報を取得
+            for forecast in data["list"][:10]:  # 最大10件まで表示
+                dt = datetime.fromtimestamp(forecast["dt"]).strftime("%Y-%m-%d %H:%M:%S")
+                weather = forecast["weather"][0]["description"]
+                temp = forecast["main"]["temp"]
+                embed.add_field(
+                    name=f"{dt}",
+                    value=f"天気: {weather}, 温度: {temp}℃",
+                    inline=False
+                )
+        else:
+            # 現在の天気
+            weather = data["weather"][0]["description"]
+            temp = data["main"]["temp"]
+            humidity = data["main"]["humidity"]
+            wind_speed = data["wind"]["speed"]
+            icon = data["weather"][0]["icon"]
+            icon_url = f"http://openweathermap.org/img/wn/{icon}@2x.png"
+
+            embed = discord.Embed(
+                title=f"☀️ {city} の現在の天気",
+                description=f"天気: {weather}\n温度: {temp}℃\n湿度: {humidity}%\n風速: {wind_speed} m/s",
+                color=discord.Colour.orange()
+            )
+            embed.set_thumbnail(url=icon_url)
+
+        await interaction.followup.send(embed=embed)
+    except requests.exceptions.HTTPError as e:
+        await interaction.followup.send(f"エラー: 指定された都市「{city}」の天気情報が見つかりません。")
+    except Exception as e:
+        await interaction.followup.send(f"エラーが発生しました: {str(e)}")
 # Wikipedia APIを使用した検索コマンド
 @bot.tree.command(name="wiki", description="Wikipediaから情報を取得します")
 async def wiki(interaction: discord.Interaction, query: str):
