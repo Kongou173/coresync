@@ -318,7 +318,21 @@ async def akinator(interaction: discord.Interaction):
         except Exception as e:
             await interaction.followup.send(f"エラーが発生しました: {e}")
             break
-            
+
+@bot.tree.command(name="search", description="Google検索結果を取得します")
+async def search(interaction: discord.Interaction, query: str):
+    """
+    query: 検索キーワード
+    """
+    await interaction.response.defer()  # 処理中メッセージを表示
+
+    # Google Custom Search APIのURL
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        "key": GOOGLE_API_KEY,
+        "cx": SEARCH_ENGINE_ID,
+        "q": query,
+        
 # Botを実行
 keep_alive()
 bot.run(TOKEN)
