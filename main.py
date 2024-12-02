@@ -94,7 +94,7 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
     else:
         await interaction.response.send_message("キック権限がありません。", ephemeral=True)
 
-timeout コマンド：ユーザーをタイムアウト
+#timeout コマンド：ユーザーをタイムアウト
 @bot.tree.command(name="timeout", description="指定時間だけユーザーをタイムアウトします")
 async def timeout(interaction: discord.Interaction, member: discord.Member, duration: int):
     if interaction.user.guild_permissions.moderate_members:
