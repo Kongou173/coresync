@@ -238,6 +238,7 @@ async def get_weather(interaction: discord.Interaction, city: str, forecast: boo
         await interaction.followup.send(f"エラー: 指定された都市「{city}」の天気情報が見つかりません。")
     except Exception as e:
         await interaction.followup.send(f"エラーが発生しました: {str(e)}")
+        
 # Wikipedia APIを使用した検索コマンド
 @bot.tree.command(name="wiki", description="Wikipediaから情報を取得します")
 async def wiki(interaction: discord.Interaction, query: str):
