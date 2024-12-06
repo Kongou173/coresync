@@ -9,6 +9,7 @@ import random
 from keep_alive import keep_alive
 from gemini_chat import gemini_chat
 from dotenv import load_dotenv
+from akinator_python import Akinator
 import wikipedia
 import requests 
 
