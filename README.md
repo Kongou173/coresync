@@ -3,9 +3,9 @@
 https://kongou173.github.io/Coresync-bot/
 
 ## このbotについて
-# 使用ライブラリ
+# 使用言語
 - <img src="https://img.shields.io/badge/-Python-3776AB.svg?logo=Python&style=popout">
-Python3.11
+
 
 # botバージョン
 discord.py
