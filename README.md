@@ -1,5 +1,6 @@
 # Coresync bot
 多機能bot(特に使用用途はない)
+botのバージョンは1.0.0です。
 
 ## Botの機能
 - ユーザーをkick・BAN、timeoutする。
@@ -13,7 +14,7 @@
 - アキネーターで遊ぶ
 - googleの検索結果を取得する
 
-# 実装コマンド
+## 実装コマンド
 - `/help`
 - `/ban <user>`
 - `/kick <user>`
@@ -30,5 +31,11 @@
 - `/akinator`
 - `/search`
 
-使用言語
+## 使用言語
 - <img src="https://img.shields.io/badge/-Python-3776AB.svg?logo=Python&style=popout">
+Python3.11
+discord.py
+
+## 最後
+エラーなどがあったら[サポートサーバー](https://discord.gg/r594PHeNNp)へ。
+Botに関する質問や、実装してほしいコマンド・機能等のリクエストもサポートサーバーにて受け付けています。
