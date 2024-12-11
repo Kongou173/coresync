@@ -19,13 +19,16 @@
 - `/kick <user>`
 - `/timeout <user> <duration>`
 - `/support`
-- `/help`
-- `/help`
-- `/help`
-- `/help`
-- `/help`
-- `/help`
-- `/help`
+- `/say <message>`
+- `/time`
+- `/chat <message>`
+- `/chat_clear`
+- `/random`
+- `/wiki`
+- `/server`
+- `/whether`
+- `/akinator`
+- `/search`
 
 使用言語
 - <img src="https://img.shields.io/badge/-Python-3776AB.svg?logo=Python&style=popout">
