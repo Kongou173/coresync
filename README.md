@@ -1,6 +1,6 @@
 # Coresync bot
-多機能bot(特に使用用途はない)
-botのバージョンは1.0.0です。
+多機能botです。
+現在のbotのバージョンは1.0.0です。
 
 ## Botの機能
 - ユーザーをkick・BAN、timeoutする。
@@ -34,7 +34,9 @@ botのバージョンは1.0.0です。
 ## 使用言語
 - <img src="https://img.shields.io/badge/-Python-3776AB.svg?logo=Python&style=popout">
 Python3.11
-discord.py
+
+## 公式サイト
+https://kongou173.github.io/Coresync-bot/
 
 ## 最後
 エラーなどがあったら[サポートサーバー](https://discord.gg/r594PHeNNp)へ。
