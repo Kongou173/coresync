@@ -335,7 +335,45 @@ async def search(interaction: discord.Interaction, query: str):
         "key": GOOGLE_API_KEY,
         "cx": SEARCH_ENGINE_ID,
         "q": query,
-        
+
+@bot.tree.command(name="proggles", description="今年の残り日数を表示します。")
+async def proggles(interaction: discord.Interaction):
+    today = datetime.now()
+    end_of_year = datetime(today.year, 12, 31)
+    remaining_days = (end_of_year - today).days + 1
+
+    await interaction.response.send_message(f"今年はあと **{remaining_days}日** しか残っていないよ！")
+
+@bot.tree.command(name="joke", description="プログラマーに関するジョークをランダムに表示します")
+async def joke(interaction: discord.Interaction):
+    # ランダムでジョークを選択する
+    selected_joke = random.choice(jokes)
+    # ジョークをチャットで返信する
+    await interaction.response.send_message(selected_joke)
+
+# ジョークのリスト
+jokes = [
+    "Q: プログラマーがPythonを選ぶ理由は？\nA: ヘビのようにコードがスッと書けるから！",
+    "Q: プログラマーはなぜ怒ると怖い？\nA: ポインタでメモリを指し示すように、怒りの矛先を一点に集中させるから！",
+    "Q: プログラマーの恋人との会話でよく出てくる言葉は？\nA: 「あー…ちょっと待っててくんない？バグを直すから」",
+    "Q: プログラマーが「簡単だよ」と言っているコードを見た時の一般の人の心境は？\nA: 騙されてはいけない…これは罠だ…",
+    "Q: プログラマーが「アルゴリズム」と言っている時、一般人が何を連想する？\nA: 魔法の言葉",
+    "Q: プログラマーが「オブジェクト指向」と言っている時、一般の人は何を思う？\nA: なぁにそれぇ？",
+    "Q: プログラマーが最も嫌いな言葉は？\nA: 「もちろんちゃんと動くよね？」「バグはないね？」",
+    "Q: プログラマーはなぜ猫を飼う人が多いのか？\nA: えー…静かな環境でコードを書けるから…と思ってるのが1つ目で、2つ目は猫もコードを書けるんじゃないかと思っているから。",
+    "Q: プログラマーが最も恐れるものは？\nA: デッドラインと、上司からの「明日までにこの機能追加してくんない？」",
+    "Q: プログラマーが「おっ！これ簡単そうじゃんwちょっとやってみようかな。もちろん自分でやるよ。」と言った時、聞いてた周囲が思う事は？\nA: ああ…また徹夜だよ…",
+    "Q: プログラマーが「正規表現」と言っている時、一般人が何を連想する？\nA: 呪文",
+    "Q: プログラマーが「よし、完成した！完璧だな…ふっ…自分が怖いぜ…」と思った瞬間、必ず起こることは？\nA: バグが出現",
+    "Q: プログラマーが「あ、ちょっと直すだけだから。」と言ったあと、数時間後に現れた時の定番のセリフは？\nA: 「ちょっとバグが複雑で…」",
+    "このジョークには何分の一の確率で、とある物が出てきます。",
+    "このbotの開発者のおすすめの曲は、White Letter、初音ミクさんの心境、stardust dreams、Whose Eye is This Anyway、琥珀色の街、上海蟹の朝、I'm a mess、ピースサイン、メサイア、サウダージです！",
+    "幻想郷に行きたいねぇ…",
+    "Q: コードレビュー中にプログラマーが最も恐れるセリフは？\nA: A: 「あのさ。このコード、誰が書いたのか教えて？」",   
+    "Q: コードレビュー中に最もよく耳にする言葉は？\nA: 「ここの部分は、もう少しシンプルに書けますよ」「ここの変数、分かりづらいですね。もう少しわかりやすく書いた方がいいんじゃないですか？」",
+    
+]
+
 # Botを実行
 keep_alive()
 bot.run(TOKEN)
