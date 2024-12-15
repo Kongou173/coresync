@@ -400,9 +400,15 @@ async def omikuji(interaction: discord.Interaction):
     response += f"**願望**: {details['願望']}\n"
     response += f"**健康**: {details['健康']}\n"
     response += f"**待ち人**: {details['待ち人']}\n"
-    response += f"**出産**: {details['出産']}\n"
+    response += f"**失せ物**: {details['失せ物']}\n"
     response += f"**商売**: {details['商売']}\n"
-    response += f"**投稿**: {details['投稿']}"
+    response += f"**学問**: {details['学問']}\n"
+    response += f"**相場**: {details['相場']}\n"
+    response += f"**旅行**: {details['旅行']}\n"
+    response += f"**病気**: {details['病気']}\n"
+    response += f"**争い事**: {details['争い事']}\n"
+    response += f"**縁談**: {details['縁談']}\n"
+    response += f"**出産**: {details['出産']}"
 
     # 結果を送信
     await interaction.response.send_message(response)
