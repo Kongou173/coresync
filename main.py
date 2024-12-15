@@ -524,6 +524,59 @@ omikuji_results = {
     }
 }
 
+@bot.tree.command(name="user", description="ユーザーの情報を表示します")
+async def user_info(interaction: discord.Interaction, member: discord.Member = None):
+    member = member or interaction.user  # 引数が指定されていない場合は実行者を取得
+
+    # タイムゾーン情報を取得
+    now = datetime.now(timezone.utc)
+
+    # アカウント作成日時
+    account_created = member.created_at
+    created_days_ago = (now - account_created).days
+    account_created_str = account_created.strftime("%Y-%m-%d %H:%M:%S")
+
+    # サーバー参加日時
+    joined_at = member.joined_at
+    joined_days_ago = (now - joined_at).days if joined_at else "不明"
+    joined_at_str = joined_at.strftime("%Y-%m-%d %H:%M:%S") if joined_at else "不明"
+
+    # 付与されているロール
+    roles = [role.mention for role in member.roles if role.name != "@everyone"]
+    roles_str = ", ".join(roles) if roles else "なし"
+
+    # ニックネーム
+    nickname = member.nick if member.nick else "なし"
+
+    # アカウントの種類
+    account_type = "BOT" if member.bot else "ユーザー"
+
+    # ステータスアイコン
+    status_dict = {
+        discord.Status.online: "🟢 オンライン",
+        discord.Status.idle: "🌙 退席中",
+        discord.Status.dnd: "🔴 取り込み中",
+        discord.Status.offline: "🔘 オフライン"
+    }
+    status = status_dict.get(member.status, "不明")
+
+    # ユーザーのアイコン
+    avatar_url = member.display_avatar.url
+
+    # 埋め込みメッセージの作成
+    embed = discord.Embed(title=f"{member.name} の情報", color=discord.Color.green())
+    embed.set_thumbnail(url=avatar_url)
+    embed.add_field(name="名前 (ID)", value=f"{member} ({member.id})", inline=False)
+    embed.add_field(name="アカウント作成日時", value=f"{account_created_str} ({created_days_ago}日前)", inline=False)
+    embed.add_field(name="サーバー参加日時", value=f"{joined_at_str} ({joined_days_ago}日前)", inline=False)
+    embed.add_field(name="役職", value=roles_str, inline=False)
+    embed.add_field(name="ニックネーム", value=nickname, inline=False)
+    embed.add_field(name="アカウントの種類", value=account_type, inline=False)
+    embed.add_field(name="現在のステータス", value=status, inline=False)
+
+    # メッセージを送信
+    await interaction.response.send_message(embed=embed)
+
 # Botを実行
 keep_alive()
 bot.run(TOKEN)
