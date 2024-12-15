@@ -65,7 +65,7 @@ async def bot_help(interaction: discord.Interaction):
      .add_field(name="/chat_clear", value="チャット履歴を削除します") \
      .add_field(name="/random", value="ユーザー名をランダムに変更します") \
 　　　.add_field(name="/wiki", value="Wikipediaから情報を取得します") \
-　　　.add_field(name="/proggles", value="今年の残り日数を表示します") \
+　　　.add_field(name="/progress", value="今年の残り日数を表示します") \
      .add_field(name="/joke", value="ランダムでジョークを表示します")
     await interaction.response.send_message(embed=embed)
 
@@ -336,7 +336,7 @@ async def search(interaction: discord.Interaction, query: str):
         "cx": SEARCH_ENGINE_ID,
         "q": query,
 
-@bot.tree.command(name="proggles", description="今年の残り日数を表示します。")
+@bot.tree.command(name="progress", description="今年の残り日数を表示します。")
 async def proggles(interaction: discord.Interaction):
     today = datetime.now()
     end_of_year = datetime(today.year, 12, 31)
