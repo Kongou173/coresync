@@ -406,7 +406,11 @@ async def omikuji(interaction: discord.Interaction):
 
     # 結果を送信
     await interaction.response.send_message(response)
-    
+    omikuji_data = {}
+
+# おみくじ結果と詳細データ
+omikuji_results = {
+    "大吉": {
         "和歌": "思ひつつ 寝ればや人の 見えつらむ\n夢と知りせば 覚めざらましを",
         "願望": "焦る事ない　機は来る",
         "健康": "普通",
