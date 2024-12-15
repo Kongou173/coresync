@@ -374,26 +374,26 @@ jokes = [
     
 ]
 
-@bot.tree.command(name="omikuji", description="おみくじを引いて今日の運勢を占おう！(1日1回まで)")
+@bot.tree.command(name="omikuji", description="おみくじを引いて今日の運勢を占います。(1日1回まで)")
 async def omikuji(interaction: discord.Interaction):
     user_id = interaction.user.id
     current_time = datetime.now()
 
-    # ユーザーがすでにおみくじを引いている場合
+    # ユーザーが既に引いてもう一度引こうとした場合
     if user_id in omikuji_data:
         last_time = omikuji_data[user_id]
         if current_time.date() == last_time.date():
-            await interaction.response.send_message("今日はすでにおみくじを引いています！また明日試してね。", ephemeral=True)
+            await interaction.response.send_message("あなたはすでに今日、おみくじを引いています！また明日試してください。", ephemeral=True)
             return
 
-    # おみくじ結果をランダムで選ぶ
+    # おみくじの結果をランダムで選ぶ(大凶が出ないように願う)
     result = random.choice(list(omikuji_results.keys()))
     details = omikuji_results[result]
 
-    # ユーザーの引いた時間を記録
+    # ユーザーがおみくじを引いた時間を記録する
     omikuji_data[user_id] = current_time
 
-    # 結果メッセージの作成
+    # 結果のメッセージ
     response = f"🎋 **{interaction.user.name}のおみくじ** 🎋\n\n"
     response += f"**運勢**: {result}\n"
     response += f"**和歌**: {details['和歌']}\n"
